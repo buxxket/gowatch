@@ -103,5 +103,5 @@ The supported *keys* are:
 ```
 
 ## todo
-- [ ] create an AUR package
+- [x] create an AUR package
 - [ ] add splits
