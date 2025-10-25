@@ -23,6 +23,16 @@ You will need Go to build the project. You can find installation instructions
 
 ## installation
 
+### from AUR
+
+There is an AUR package available. You can install it with:
+
+```sh
+yay -S gowatch
+```
+
+### building from source
+
 Clone the repo and `cd` into the directory:
 
 ```sh
@@ -30,7 +40,7 @@ git clone https://github.com/buxxket/gowatch.git
 cd gowatch
 ```
 
-### unix (Linux and MacOS)
+#### unix (Linux and MacOS)
 
 Build the project, symlink the binary to your path, and copy the default config
 file to `~/.config/gowatch/config.yaml`:
@@ -49,7 +59,7 @@ mkdir -p ~/.config/gowatch
 cp "$(pwd)/config.yaml.default" ~/.config/gowatch/config.yaml
 ```
 
-### bad operating systems (Windows)
+#### bad operating systems (Windows)
 
 ```powershell
 # Build the project
@@ -78,6 +88,10 @@ Each time you pause or reset the timer, the elapsed time is written to
 it.
 
 ## customisation
+
+Copy the [default
+config](https://github.com/buxxket/gowatch/blob/main/config.yaml.default) to
+`$HOME/.config/gowatch/config.yaml`:
 
 The supported *modifiers* are:
 ```
