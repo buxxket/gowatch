@@ -46,7 +46,7 @@ mkdir -p ~/.config/gowatch
 cp "$(pwd)/config.yaml.default" ~/.config/gowatch/config.yaml
 ```
 
-## bad operating systems (Windows)
+### bad operating systems (Windows)
 
 ```powershell
 # Build the project
