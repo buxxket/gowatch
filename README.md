@@ -1,12 +1,14 @@
 # gowatch
 
 ## about
-**Gowatch** is a simple terminal-based stopwatch. This project is an very simple
-alternative to something like [LiveSplit](https://livesplit.org/), but much
-lighter-weight. I built this as I couldn't find a good stopwatch tool to use in
-DBD 1v1s on Linux, and other solutions never seemed to grab the hotkeys from my
-system while I was in-game. So, rather than try and figure out why DWM wouldn't
-pass these keys through, I spent an afternoon making this.
+**Gowatch** is a simple, multi-platform, terminal-based stopwatch that
+is controlled by global hotkeys. It works with Linux (X11 only), MacOS, and
+Windows (native, not WSL). This project is an very simple alternative to
+something like [LiveSplit](https://livesplit.org/), but much lighter-weight. I
+built this as I couldn't find a good stopwatch tool to use in DBD 1v1s on Linux,
+and other solutions never seemed to grab the hotkeys from my system while I was
+in-game. So, rather than try and figure out why DWM wouldn't pass these keys
+through, I spent an afternoon making this.
 
 ## requirements
 You will need Go to build the project. You can find installation instructions
