@@ -48,6 +48,17 @@ Each time you pause or reset the timer, the elapsed time is written to
 `/tmp/gowatch`, just in case you didn't catch the timestamp before you cleared
 it.
 
+## customisation
+
+The supported *modifiers* are:
+```
+CMD, ALT, WIN, SUPER, CTRL, OPTION, SHIFT
+```
+The supported *keys* are:
+```
+0-1, A-Z
+```
+
 ## todo
 - [ ] create an AUR package
 - [ ] add splits
