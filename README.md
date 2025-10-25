@@ -20,14 +20,14 @@ You will need Go to build the project. You can find installation instructions
 
 ## installation
 
-### unix (Linux and MacOS)
-
 Clone the repo and `cd` into the directory:
 
 ```sh
 git clone https://github.com/buxxket/gowatch.git
 cd gowatch
 ```
+
+### unix (Linux and MacOS)
 
 Build the project, symlink the binary to your path, and copy the default config
 file to `~/.config/gowatch/config.yaml`:
