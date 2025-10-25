@@ -20,6 +20,8 @@ You will need Go to build the project. You can find installation instructions
 
 ## installation
 
+### unix (Linux and MacOS)
+
 Clone the repo and `cd` into the directory:
 
 ```sh
@@ -31,10 +33,34 @@ Build the project, symlink the binary to your path, and copy the default config
 file to `~/.config/gowatch/config.yaml`:
 
 ```sh
+# Build the project
 go build .
+
+# Create a symbolic link to the binary in ~/bin
 ln -s "$(pwd)/gowatch" ~/bin/
+
+# Create the configuration directory
 mkdir -p ~/.config/gowatch
+
+# Copy the default configuration file
 cp "$(pwd)/config.yaml.default" ~/.config/gowatch/config.yaml
+```
+
+## bad operating systems (Windows)
+
+```powershell
+# Build the project
+go build .
+
+# Copy the binary to a directory already in the PATH
+copy .\gowatch.exe "$env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\gowatch.exe"
+
+# Ensure the config directory exists in %APPDATA%
+$APPDATA_PATH = "$env:APPDATA\gowatch"
+mkdir $APPDATA_PATH
+
+# Copy the default config to the config directory
+copy .\config.yaml.default "$APPDATA_PATH\config.yaml"
 ```
 
 ## usage
