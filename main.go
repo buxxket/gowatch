@@ -5,17 +5,12 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
 	"time"
 
 	"github.com/spf13/viper"
 	"golang.design/x/hotkey"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 type HotkeyConfig struct {
 	StartPause string `mapstructure:"startpause"`
@@ -24,6 +19,28 @@ type HotkeyConfig struct {
 
 type AppConfig struct {
 	Hotkeys HotkeyConfig `mapstructure:"hotkeys"`
+}
+
+func printTime(d time.Duration) {
+	minutes := int(d.Minutes())
+	seconds := int(d.Seconds()) % 60
+	milliseconds := int(d.Milliseconds()) % 1000
+	fmt.Printf("\r%02d:%02d.%03d", minutes, seconds, milliseconds)
+}
+
+func writeElapsedToFile(elapsed time.Duration) {
+	var path string
+	if runtime.GOOS == "windows" {
+		path = os.TempDir() + "\\gowatch"
+	} else {
+		path = "/tmp/gowatch"
+	}
+	f, err := os.Create(path)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	fmt.Fprintf(f, "%02d:%02d.%03d\n", int(elapsed.Minutes()), int(elapsed.Seconds())%60, int(elapsed.Milliseconds())%1000)
 }
 
 func main() {
@@ -40,14 +57,11 @@ func main() {
 		log.Fatalf("Unable to decode into struct, %v", err)
 	}
 
-	startPauseStr := config.Hotkeys.StartPause
-	resetStr := config.Hotkeys.Reset
-
-	startPauseMods, startPauseKey, err := ParseHotkeyString(startPauseStr)
+	startPauseMods, startPauseKey, err := ParseHotkeyString(config.Hotkeys.StartPause)
 	if err != nil {
 		log.Fatalf("Invalid StartPause hotkey: %v", err)
 	}
-	resetMods, resetKey, err := ParseHotkeyString(resetStr)
+	resetMods, resetKey, err := ParseHotkeyString(config.Hotkeys.Reset)
 	if err != nil {
 		log.Fatalf("Invalid Reset hotkey: %v", err)
 	}
@@ -55,15 +69,11 @@ func main() {
 	startPause := hotkey.New(startPauseMods, startPauseKey)
 	reset := hotkey.New(resetMods, resetKey)
 
-	file, err := os.Create("/tmp/gowatch")
-	check(err)
-
 	if err := startPause.Register(); err != nil {
 		fmt.Println("Failed to register start/pause hotkey:", err)
 		return
 	}
 	defer startPause.Unregister()
-
 	if err := reset.Register(); err != nil {
 		fmt.Println("Failed to register reset hotkey:", err)
 		return
@@ -76,7 +86,6 @@ func main() {
 
 	ticker := time.NewTicker(50 * time.Millisecond)
 	defer ticker.Stop()
-
 	done := make(chan struct{})
 
 	go func() {
@@ -94,7 +103,6 @@ func main() {
 			}
 		}
 	}()
-
 	go func() {
 		for {
 			select {
@@ -105,11 +113,11 @@ func main() {
 				} else {
 					running = false
 					elapsed += time.Since(startTime)
-					file.WriteString(writeTimeToFile(elapsed))
+					writeElapsedToFile(elapsed)
 				}
 			case <-reset.Keydown():
 				running = false
-				file.WriteString("\n")
+				writeElapsedToFile(elapsed)
 				elapsed = 0
 			case <-done:
 				return
@@ -123,19 +131,4 @@ func main() {
 	close(done)
 	fmt.Println("\nExiting.")
 	os.Exit(0)
-}
-
-func printTime(d time.Duration) {
-	minutes := int(d.Minutes())
-	seconds := int(d.Seconds()) % 60
-	milliseconds := int(d.Milliseconds()) % 1000
-	fmt.Printf("\r%02d:%02d.%03d", minutes, seconds, milliseconds)
-}
-
-func writeTimeToFile(d time.Duration) string {
-	minutes := int(d.Minutes())
-	seconds := int(d.Seconds()) % 60
-	milliseconds := int(d.Milliseconds()) % 1000
-	time := fmt.Sprintf("\r%02d:%02d.%03d\n", minutes, seconds, milliseconds)
-	return time
 }
