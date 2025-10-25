@@ -25,7 +25,8 @@ You will need Go to build the project. You can find installation instructions
 
 ### from AUR
 
-There is an AUR package available. You can install it with:
+There is an [AUR](https://aur.archlinux.org/packages/gowatch) package available.
+You can install it with:
 
 ```sh
 yay -S gowatch
