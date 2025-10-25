@@ -55,6 +55,8 @@ func main() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file, %s", err)
+		fmt.Println("You can copy the default config file with:")
+		fmt.Println("cp /usr/share/gowatch/config.yaml $HOME/.config/gowatch/config.yaml")
 	}
 
 	var config AppConfig
