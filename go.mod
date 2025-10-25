@@ -1,6 +1,6 @@
 module gowatch
 
-go 1.25.3
+go 1.25
 
 require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
