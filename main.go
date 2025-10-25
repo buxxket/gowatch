@@ -44,9 +44,14 @@ func writeElapsedToFile(elapsed time.Duration) {
 }
 
 func main() {
+	configPath, err := ConfigFilePath()
+	if err != nil {
+		log.Fatalf("Error determining config file path: %v", err)
+	}
+
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(fmt.Sprintf("%s/.config/gowatch", os.Getenv("HOME")))
+	viper.AddConfigPath(configPath)
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file, %s", err)
