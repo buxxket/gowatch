@@ -1,0 +1,5 @@
+# Gowatch configuration file
+# modifiers go first, followed by the hotkey, seperated by a '+'
+hotkeys:
+  startpause: "Mod1+W"
+  reset: "Mod1+R"
