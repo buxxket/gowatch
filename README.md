@@ -82,11 +82,15 @@ copy .\config.yaml.default "$APPDATA_PATH\config.yaml"
 Run `gowatch`.
 
 Default keybinds are `Alt + W` to start/pause the timer (good for starting DBD
-1v1s), and `Alt + R` to reset the timer.
+1v1s), and `Alt + R` to reset the timer. For the speedrunners, split support has
+been added, with the default keybind set to `Alt + Space`. All these can be
+changed in the [config
+file](https://github.com/buxxket/gowatch/blob/main/config.yaml.default)
 
 Each time you pause or reset the timer, the elapsed time is written to
-`/tmp/gowatch`, just in case you didn't catch the timestamp before you cleared
-it.
+`/tmp/gowatch` (or whatever you set it to in
+`$HOME/.config/gowatch/config.yaml`) just in case you didn't catch the timestamp
+before you cleared it.
 
 ## customisation
 
@@ -105,4 +109,8 @@ The supported *keys* are:
 
 ## todo
 - [x] create an AUR package
-- [ ] add splits
+- [x] add splits
+- [x] add custom output file support
+- [x] add starting timestamp to output file
+- [ ] add mouse support
+- [ ] add overlay/gui
