@@ -7,4 +7,6 @@
 hotkeys:
   startpause: "Alt+W"
   reset: "Alt+R"
-	split: "Alt+Space"
+  split: "Alt+Space"
+outputpath: "$HOME/.cache/gowatch/gowatch.log"
+
