@@ -35,28 +35,83 @@ func expandPath(path string) string {
 	return path
 }
 
-func printTime(d time.Duration) {
-	minutes := int(d.Minutes())
-	seconds := int(d.Seconds()) % 60
-	milliseconds := int(d.Milliseconds()) % 1000
+func printTimeToConsole(elapsedTime time.Duration) {
+	hours := int(elapsedTime.Hours())
+	minutes := int(elapsedTime.Minutes())
+	seconds := int(elapsedTime.Seconds()) % 60
+	milliseconds := int(elapsedTime.Milliseconds()) % 1000
 	fmt.Printf("\033[2K\r")
-	fmt.Printf("\r%02d:%02d.%03d", minutes, seconds, milliseconds)
+	if hours == 0 {
+		fmt.Printf("\r%02d:%02d.%03d", minutes, seconds, milliseconds)
+	} else {
+		fmt.Printf(
+			"\r%02d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds)
+	}
 }
 
-func printSplitToConsole(splitCount int, d time.Duration) {
-	minutes := int(d.Minutes())
-	seconds := int(d.Seconds()) % 60
-	milliseconds := int(d.Milliseconds()) % 1000
+func printSplitToConsole(splitCount int, splitTime time.Duration) {
+	hours := int(splitTime.Hours())
+	minutes := int(splitTime.Minutes())
+	seconds := int(splitTime.Seconds()) % 60
+	milliseconds := int(splitTime.Milliseconds()) % 1000
 	fmt.Printf("\033[2K\r")
-	fmt.Printf("\r"+splitCounterStringFormatter(splitCount)+":\t%02d:%02d.%03d", minutes, seconds, milliseconds)
+	if hours == 0 {
+		fmt.Printf(
+			splitCounterStringFormatter(splitCount)+":\t%02d:%02d.%03d\n",
+			minutes, seconds, milliseconds)
+	} else {
+		fmt.Printf(
+			splitCounterStringFormatter(splitCount)+":\t%02d:%02d:%02d.%03d\n",
+			hours, minutes, seconds, milliseconds)
+	}
 }
 
 func writeElapsedToFile(outputFile *os.File, passedText string,
 	elapsedTime time.Duration) {
-	fmt.Fprintf(outputFile, "%v\t%02d:%02d.%03d\n",
-		passedText, int(elapsedTime.Minutes()),
-		int(elapsedTime.Seconds())%60,
-		int(elapsedTime.Milliseconds())%1000)
+	hours := int(elapsedTime.Hours())
+	minutes := int(elapsedTime.Minutes())
+	seconds := int(elapsedTime.Seconds()) % 60
+	milliseconds := int(elapsedTime.Milliseconds()) % 1000
+	if hours == 0 {
+		fmt.Fprintf(outputFile, "%v\t%02d:%02d.%03d\n",
+			passedText, minutes, seconds, milliseconds)
+	} else {
+		fmt.Fprintf(outputFile, "%v\t%02d:%02d:%02d.%03d\n",
+			passedText, hours, minutes, seconds, milliseconds)
+	}
+}
+
+func writeSplitToFile(outputFile *os.File, splitCount int,
+	elapsedTime time.Duration, splitTime time.Duration) {
+	elapsedHours := int(elapsedTime.Hours())
+	elapsedMinutes := int(elapsedTime.Minutes())
+	elapsedSeconds := int(elapsedTime.Seconds()) % 60
+	elapsedMilliseconds := int(elapsedTime.Milliseconds()) % 1000
+	splitHours := int(splitTime.Hours())
+	splitMinutes := int(splitTime.Minutes())
+	splitSeconds := int(splitTime.Seconds()) % 60
+	splitMilliseconds := int(splitTime.Milliseconds()) % 1000
+	if elapsedHours != 0 || splitHours != 0 {
+		fmt.Fprintf(outputFile,
+			splitCounterStringFormatter(splitCount)+":\t%02d:%02d:%02d.%03d\t%02d:%02d:%02d.%03d\n",
+			elapsedHours,
+			elapsedMinutes,
+			elapsedSeconds,
+			elapsedMilliseconds,
+			splitHours,
+			splitMinutes,
+			splitSeconds,
+			splitMilliseconds)
+	} else {
+		fmt.Fprintf(outputFile,
+			splitCounterStringFormatter(splitCount)+":\t%02d:%02d.%03d\t%02d:%02d.%03d\n",
+			elapsedMinutes,
+			elapsedSeconds,
+			elapsedMilliseconds,
+			splitMinutes,
+			splitSeconds,
+			splitMilliseconds)
+	}
 }
 
 func writeStartTimeToFile(outputFile *os.File, startTime time.Time) error {
@@ -151,7 +206,7 @@ func main() {
 	var startTime time.Time
 	var elapsed time.Duration
 	var splitElapsed time.Duration
-	var lastSplit time.Duration = -1 // so first split always writes
+	var lastSplit time.Duration = -1
 	var splitCount int = 0
 	var splitDifference time.Duration
 
@@ -165,9 +220,9 @@ func main() {
 			case <-ticker.C:
 				if isTimerRunning {
 					now := time.Now()
-					printTime(elapsed + now.Sub(startTime))
+					printTimeToConsole(elapsed + now.Sub(startTime))
 				} else {
-					printTime(elapsed)
+					printTimeToConsole(elapsed)
 				}
 			case <-done:
 				return
@@ -209,11 +264,9 @@ func main() {
 				if lastSplit != splitElapsed {
 					splitDifference = splitElapsed - lastSplit
 					splitCount++
-					writeElapsedToFile(outputFile,
-						splitCounterStringFormatter(splitCount)+":", splitElapsed)
+					writeSplitToFile(outputFile, splitCount, splitElapsed, splitDifference)
 					fmt.Println()
 					printSplitToConsole(splitCount, splitDifference)
-					printTime(splitElapsed)
 					lastSplit = splitElapsed
 				}
 			case <-done:
