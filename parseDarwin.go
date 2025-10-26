@@ -31,7 +31,7 @@ func ParseHotkeyString(s string) ([]hotkey.Modifier, hotkey.Key, error) {
 				"M": hotkey.KeyM, "N": hotkey.KeyN, "O": hotkey.KeyO, "P": hotkey.KeyP,
 				"Q": hotkey.KeyQ, "R": hotkey.KeyR, "S": hotkey.KeyS, "T": hotkey.KeyT,
 				"U": hotkey.KeyU, "V": hotkey.KeyV, "W": hotkey.KeyW, "X": hotkey.KeyX,
-				"Y": hotkey.KeyY, "Z": hotkey.KeyZ,
+				"Y": hotkey.KeyY, "Z": hotkey.KeyZ, "SPACE": hotkey.KeySpace,
 			}
 			up := strings.ToUpper(part)
 			if val, ok := keyMap[up]; ok {
