@@ -177,7 +177,7 @@ func main() {
 	outputFile, err := os.OpenFile(outputPath,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		return
+		log.Fatal(err)
 	}
 	defer outputFile.Close()
 
